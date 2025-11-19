@@ -4,12 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payme - Web Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Combined CSS for all sections */
+        /* ===== RESET & GLOBAL STYLES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #17a2a2;
+            --primary-dark: #138787;
+            --text-dark: #333;
+            --text-light: #666;
+            --text-muted: #999;
+            --bg-light: #f8f9fb;
+            --bg-white: #fff;
+            --border-light: #eee;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 8px 16px rgba(23, 162, 162, 0.3);
+            --transition: all 0.3s ease;
+            --border-radius: 4px;
         }
 
         body {
@@ -17,21 +33,108 @@
             background: linear-gradient(135deg, #f8f9fb 0%, #f0f4f8 100%);
             overflow-x: hidden;
             line-height: 1.6;
+            color: var(--text-dark);
         }
 
-        /* Header Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .section-header .highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .section-header p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #f0f8f8;
+        }
+
+        /* ===== HEADER ===== */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 60px;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            background: var(--bg-white);
+            box-shadow: var(--shadow);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         header.scrolled {
@@ -42,7 +145,7 @@
         .logo {
             font-size: 24px;
             font-weight: 700;
-            color: #17a2a2;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -55,14 +158,30 @@
 
         nav a {
             text-decoration: none;
-            color: #333;
+            color: var(--text-dark);
             font-size: 14px;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: var(--transition);
+            position: relative;
         }
 
         nav a:hover {
-            color: #17a2a2;
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
         }
 
         .auth-buttons {
@@ -74,35 +193,150 @@
         .sign-in {
             background: none;
             border: none;
-            color: #333;
+            color: var(--text-dark);
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: var(--transition);
         }
 
         .sign-in:hover {
-            color: #17a2a2;
+            color: var(--primary);
         }
 
         .sign-up {
             background: none;
-            border: 2px solid #17a2a2;
-            color: #17a2a2;
+            border: 2px solid var(--primary);
+            color: var(--primary);
             padding: 8px 20px;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .sign-up:hover {
-            background: #17a2a2;
-            color: white;
+            background: var(--primary);
+            color: var(--bg-white);
         }
 
-        /* Hero Section */
+        /* ===== MOBILE MENU ===== */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background-color: var(--text-dark);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--bg-white);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 80px 30px 30px;
+            transition: right 0.4s ease;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 18px;
+            font-weight: 500;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mobile-auth-buttons button {
+            padding: 12px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-sign-in {
+            background: none;
+            border: 1px solid #ddd;
+            color: var(--text-dark);
+        }
+
+        .mobile-sign-up {
+            background: var(--primary);
+            border: none;
+            color: var(--bg-white);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 998;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ===== HERO SECTION ===== */
         .hero {
             padding: 160px 60px 80px;
             display: flex;
@@ -124,17 +358,17 @@
             line-height: 1.2;
             margin-bottom: 20px;
             font-weight: 300;
-            color: #333;
+            color: var(--text-dark);
         }
 
         .hero h1 .highlight {
-            color: #17a2a2;
+            color: var(--primary);
             font-weight: 700;
         }
 
         .hero p {
             font-size: 14px;
-            color: #666;
+            color: var(--text-light);
             line-height: 1.6;
             margin-bottom: 40px;
             max-width: 400px;
@@ -145,40 +379,6 @@
             gap: 20px;
         }
 
-        .btn {
-            padding: 14px 32px;
-            border: none;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background: #17a2a2;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #138787;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(23, 162, 162, 0.3);
-        }
-
-        .btn-secondary {
-            background: none;
-            border: 2px solid #17a2a2;
-            color: #17a2a2;
-        }
-
-        .btn-secondary:hover {
-            background: #f0f8f8;
-        }
-
-        /* Hero Image */
         .hero-image {
             flex: 1;
             position: relative;
@@ -206,7 +406,7 @@
             object-fit: cover;
         }
 
-        /* Decorative Elements */
+        /* ===== DECORATIVE ELEMENTS ===== */
         .decoration {
             position: absolute;
             pointer-events: none;
@@ -277,12 +477,12 @@
             transform: rotate(-15deg);
         }
 
-        /* Clients Section */
+        /* ===== CLIENTS SECTION ===== */
         .clients-section {
             padding: 60px;
             text-align: center;
-            background: white;
-            border-top: 1px solid #eee;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
         }
 
         .clients {
@@ -296,151 +496,162 @@
         .client-logo {
             font-size: 16px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: var(--transition);
+        }
+
+        .client-logo:hover {
+            transform: translateY(-3px);
         }
 
         .client-logo svg {
             width: 24px;
             height: 24px;
-            stroke: #333;
+            stroke: var(--text-dark);
             stroke-width: 2;
             fill: none;
         }
 
-        /* Services Section */
+        /* ===== SERVICES SECTION ===== */
         .services-section {
-            padding: 100px 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
             position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-header h1 {
-            font-size: 42px;
-            font-weight: 300;
-            color: #333;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .section-header h1 .highlight {
-            color: #17a2a2;
-            font-weight: 600;
-        }
-
-        .section-header p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.6;
-            max-width: 500px;
+            max-width: 1120px;
             margin: 0 auto;
+            padding: 84px 22px 90px;
+        }
+
+        .services-section::before,
+        .services-section::after {
+            content: "";
+            position: absolute;
+            left: -160px;
+            top: 160px;
+            width: 460px;
+            height: 1.6px;
+            background: linear-gradient(90deg, rgba(26,167,161,0), rgba(26,167,161,.7), rgba(26,167,161,0));
+            transform: rotate(-27deg);
+            opacity: .75;
+            pointer-events: none;
+        }
+
+        .services-section::after {
+            left: auto;
+            right: -180px;
+            bottom: -20px;
+            top: auto;
         }
 
         .services-grid {
+            margin-top: 18px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 50px;
-            position: relative;
+            grid-template-columns: repeat(2, minmax(260px, 1fr));
+            gap: 28px;
         }
 
         .service-card {
             position: relative;
-            height: 280px;
-            border-radius: 140px;
+            height: 300px;
             overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #0b0b0b;
+            border-radius: 24px;
+            box-shadow: 0 12px 35px rgba(16,24,40,.10);
+            transform: translateZ(0);
         }
 
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        .shape-tl { border-top-left-radius: 150px; border-bottom-right-radius: 44px; }
+        .shape-tr { border-top-right-radius: 150px; border-bottom-left-radius: 44px; }
+        .shape-bl { border-bottom-left-radius: 150px; border-top-right-radius: 44px; }
+        .shape-br { border-bottom-right-radius: 150px; border-top-left-radius: 44px; }
+
+        .service-bg {
+            position: absolute; 
+            inset: 0;
+            background-size: cover; 
+            background-position: center;
+            filter: saturate(1.08) contrast(1.03);
+            transform: scale(1.06);
+            transition: transform .7s cubic-bezier(.2,.65,.2,1);
         }
 
-        .service-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .service-card::before {
+            content: "";
+            position: absolute; 
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.60));
+            transition: opacity .35s ease;
+            opacity: .95;
         }
 
-        .service-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            top: 0;
-            background: rgba(0, 0, 0, 0.35);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            transition: background 0.3s ease;
+        .service-card:hover .service-bg { 
+            transform: scale(1.12); 
         }
 
-        .service-card:hover .service-overlay {
-            background: rgba(0, 0, 0, 0.45);
+        .service-card:hover::before { 
+            opacity: .86; 
+        }
+
+        .service-content {
+            position: absolute; 
+            inset: 0;
+            display: grid; 
+            place-items: center;
+            text-align: center; 
+            color: #fff; 
+            padding: 18px;
         }
 
         .service-title {
-            font-size: 28px;
             font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.2;
+            font-size: 21px;
+            line-height: 1.25;
+            text-shadow: 0 4px 22px rgba(0,0,0,.45);
         }
 
-        .stars {
-            display: flex;
-            justify-content: center;
-            gap: 4px;
-            font-size: 18px;
+        .service-stars {
+            margin-top: 10px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,.35);
         }
 
-        .star {
-            color: #ffc107;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .service-stars span { 
+            color: #ffc92d; 
         }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
+        .services-cta {
+            text-align: center;
+            margin-top: 42px;
         }
 
         .explore-btn {
-            padding: 12px 30px;
-            border: 2px solid #17a2a2;
-            background: transparent;
-            color: #17a2a2;
-            font-size: 14px;
+            position: relative;
+            background: #fff;
+            color: var(--primary);
+            border: 1.2px solid var(--primary);
+            padding: 12px 28px;
+            border-radius: 7px;
             font-weight: 500;
-            border-radius: 4px;
+            letter-spacing: .2px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
+            box-shadow: 0 6px 22px rgba(26,167,161,.12);
+            transition: var(--transition);
         }
 
-        .explore-btn:hover {
-            background: #17a2a2;
-            color: white;
-            box-shadow: 0 5px 15px rgba(23, 162, 162, 0.3);
+        .explore-btn:hover { 
+            background: var(--primary); 
+            color: #fff; 
+            transform: translateY(-1px); 
         }
 
-        /* Features Section */
+        .explore-btn:focus-visible { 
+            outline: 2px solid var(--primary); 
+            outline-offset: 3px; 
+        }
+
+        /* ===== FEATURES SECTION ===== */
         .features-section {
             padding: 100px 20px;
             background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
@@ -459,50 +670,69 @@
         }
 
         .feature-card {
-            background: white;
+            background: var(--bg-white);
             padding: 40px 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             animation: fadeInUp 0.6s ease;
-            border: 1px solid #f0f0f0;
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: var(--primary);
+            transition: height 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            height: 100%;
         }
 
         .feature-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 30px rgba(23, 162, 162, 0.15);
-            border-color: #17a2a2;
+            border-color: var(--primary);
         }
 
         .feature-title {
             font-size: 20px;
             font-weight: 500;
-            color: #17a2a2;
+            color: var(--primary);
             margin-bottom: 15px;
         }
 
         .feature-description {
             font-size: 14px;
-            color: #666;
+            color: var(--text-light);
             line-height: 1.7;
             margin-bottom: 20px;
         }
 
         .learn-more {
-            color: #17a2a2;
+            color: var(--primary);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .learn-more:hover {
             transform: translateX(4px);
-            color: #128a8a;
+            color: var(--primary-dark);
         }
 
-        /* Testimonials Section */
+        /* ===== TESTIMONIALS SECTION ===== */
         .testimonials-section {
             padding: 100px 20px;
             background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
@@ -518,7 +748,7 @@
         }
 
         .testimonial-card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 20px;
             padding: 50px;
             max-width: 900px;
@@ -529,7 +759,7 @@
             gap: 50px;
             align-items: center;
             animation: fadeInUp 0.8s ease-out 0.2s both;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .testimonial-image {
@@ -623,20 +853,20 @@
         .dot {
             width: 12px;
             height: 12px;
-            border: 2px solid #17a2a2;
+            border: 2px solid var(--primary);
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             background: transparent;
         }
 
         .dot.active {
-            background: #17a2a2;
+            background: var(--primary);
             transform: scale(1.2);
             box-shadow: 0 0 10px rgba(23, 162, 162, 0.4);
         }
 
-        /* Pricing Section */
+        /* ===== PRICING SECTION ===== */
         .pricing-section {
             padding: 100px 20px;
             background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
@@ -650,20 +880,36 @@
         }
 
         .pricing-card {
-            background: white;
+            background: var(--bg-white);
             border-radius: 12px;
             padding: 40px 30px;
             border: 1px solid #e8e8e8;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition);
             animation: fadeInUp 0.8s ease-out forwards;
             opacity: 0;
+            position: relative;
         }
 
         .pricing-card.featured {
             transform: translateY(-20px);
             box-shadow: 0 20px 60px rgba(23, 162, 162, 0.15);
-            border: 2px solid #17a2a2;
+            border: 2px solid var(--primary);
             position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--bg-white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .pricing-card:hover {
@@ -678,7 +924,7 @@
 
         .plan-name {
             font-size: 18px;
-            color: #333;
+            color: var(--text-dark);
             margin-bottom: 15px;
             font-weight: 600;
         }
@@ -686,31 +932,31 @@
         .plan-price {
             font-size: 48px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-dark);
             margin-bottom: 5px;
         }
 
         .plan-price span {
             font-size: 24px;
             font-weight: 400;
-            color: #666;
+            color: var(--text-light);
         }
 
         .pricing-card.featured .plan-price {
-            color: #17a2a2;
+            color: var(--primary);
         }
 
         .features-list {
             list-style: none;
             margin: 30px 0;
             padding: 30px 0;
-            border-top: 1px solid #f0f0f0;
-            border-bottom: 1px solid #f0f0f0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .features-list li {
             padding: 12px 0;
-            color: #666;
+            color: var(--text-light);
             font-size: 14px;
             display: flex;
             align-items: center;
@@ -721,7 +967,7 @@
             content: '';
             width: 6px;
             height: 6px;
-            background: #17a2a2;
+            background: var(--primary);
             border-radius: 50%;
             margin-right: 12px;
             flex-shrink: 0;
@@ -730,14 +976,14 @@
         .cta-button {
             width: 100%;
             padding: 14px 30px;
-            border: 2px solid #17a2a2;
+            border: 2px solid var(--primary);
             background: transparent;
-            color: #17a2a2;
+            color: var(--primary);
             font-size: 14px;
             font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             margin-top: 20px;
         }
 
@@ -747,12 +993,12 @@
         }
 
         .pricing-card.featured .cta-button {
-            background: #17a2a2;
-            color: white;
-            border-color: #17a2a2;
+            background: var(--primary);
+            color: var(--bg-white);
+            border-color: var(--primary);
         }
 
-        /* FAQ Section */
+        /* ===== FAQ SECTION ===== */
         .faq-section {
             padding: 100px 20px;
             background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
@@ -774,7 +1020,7 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .faq-item:hover {
@@ -794,12 +1040,12 @@
             cursor: pointer;
             background: #ffffff;
             border: 2px solid transparent;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             min-height: 70px;
         }
 
         .faq-item.active .faq-question {
-            border-left: 4px solid #17a2a2;
+            border-left: 4px solid var(--primary);
             background: #f9feff;
         }
 
@@ -822,15 +1068,15 @@
             background: #f0f0f0;
             border-radius: 4px;
             font-size: 24px;
-            color: #17a2a2;
-            transition: all 0.3s ease;
+            color: var(--primary);
+            transition: var(--transition);
             flex-shrink: 0;
             font-weight: 300;
             line-height: 1;
         }
 
         .faq-item.active .faq-toggle {
-            background: #17a2a2;
+            background: var(--primary);
             color: #ffffff;
             transform: rotate(45deg);
         }
@@ -854,7 +1100,7 @@
             animation: fadeIn 0.3s ease 0.1s both;
         }
 
-        /* CTA Section */
+        /* ===== CTA SECTION ===== */
         .cta-section {
             background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
             padding: 80px 40px;
@@ -893,7 +1139,7 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-decoration: none;
             letter-spacing: 0.5px;
         }
@@ -905,7 +1151,7 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
-        /* Footer Section */
+        /* ===== FOOTER ===== */
         .footer {
             background-color: #2a2a2a;
             color: #e0e0e0;
@@ -932,19 +1178,19 @@
         .footer-column p {
             font-size: 14px;
             line-height: 1.6;
-            color: #999999;
+            color: var(--text-muted);
         }
 
         .footer-logo {
             font-size: 24px;
             font-weight: 700;
-            color: #17a2a2;
+            color: var(--primary);
             margin-bottom: 15px;
         }
 
         .footer-address {
             font-size: 13px;
-            color: #999999;
+            color: var(--text-muted);
             line-height: 1.8;
             margin-top: 10px;
         }
@@ -958,20 +1204,20 @@
         }
 
         .footer-links a {
-            color: #999999;
+            color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.3s ease;
+            transition: var(--transition);
         }
 
         .footer-links a:hover {
-            color: #17a2a2;
+            color: var(--primary);
         }
 
         .footer-contact-item {
             margin-bottom: 16px;
             font-size: 14px;
-            color: #999999;
+            color: var(--text-muted);
         }
 
         .footer-contact-item strong {
@@ -993,7 +1239,7 @@
             color: #666666;
         }
 
-        /* Animations */
+        /* ===== ANIMATIONS ===== */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
@@ -1048,7 +1294,11 @@
             }
         }
 
-        /* Responsive Design */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 1024px) {
             .hero {
                 flex-direction: column;
@@ -1085,15 +1335,19 @@
 
         @media (max-width: 768px) {
             header {
-                flex-direction: column;
-                gap: 20px;
                 padding: 15px 20px;
             }
 
             nav {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
+                display: none;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
             }
 
             .hero {
@@ -1183,6 +1437,8 @@
     <!-- Header -->
     <header id="header">
         <div class="logo">Payme</div>
+        
+        <!-- Desktop Navigation -->
         <nav>
             <a href="#home">Home</a>
             <a href="#services">Services</a>
@@ -1191,11 +1447,38 @@
             <a href="#pricing">Pricing</a>
             <a href="#faq">FAQ</a>
         </nav>
+        
+        <!-- Desktop Auth Buttons -->
         <div class="auth-buttons">
             <button class="sign-in">Sign in</button>
             <button class="sign-up">Sign up</button>
         </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#features">Features</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        
+        <div class="mobile-auth-buttons">
+            <button class="mobile-sign-in">Sign in</button>
+            <button class="mobile-sign-up">Sign up</button>
+        </div>
+    </div>
+    
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" id="overlay"></div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -1206,7 +1489,7 @@
 
         <div class="hero-content">
             <h1>
-                Providing <span style="color: #999;">0</span><br>
+                Providing 
                 Best<br>
                 <span class="highlight">WEB Services</span>
             </h1>
@@ -1220,9 +1503,7 @@
         <div class="hero-image">
             <div class="shape-cyan decoration"></div>
             <div class="shape-beige decoration"></div>
-            <div class="image-circle">
-                <img src="79ba0f0b-1e20-42eb-83bc-95c826bf1fc6.jpg" alt="Professional woman smiling">
-            </div>
+                <img src="Gemini_Generated_Image_w6g2ksw6g2ksw6g2-removebg-preview.png" alt="Professional woman smiling">
         </div>
     </section>
 
@@ -1244,79 +1525,73 @@
     </section>
 
     <!-- Services Section -->
-    <section class="services-section" id="services">
-        <div class="container">
-            <div class="section-header">
-                <h1>Best <span class="highlight">Services</span></h1>
-                <p>Letter of on become he tended active enable to. Vicinity relation sensible sociable surprise screened no up as.</p>
-            </div>
+    <section class="services-section section" id="services">
+        <div class="section-header">
+            <h1>Best <span class="highlight">Services</span></h1>
+            <p>Letter of on become he tended active enable to. Vicinity relation sensible sociable surprise screened no up as.</p>
+        </div>
 
-            <div class="services-grid">
-                <div class="service-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iBOi65XjQcnyxLIuwzwMa6lGxKyUcL.png" alt="Web Development" style="object-position: 0% 0%;">
-                    <div class="service-overlay">
+        <div class="services-grid">
+            <!-- Card 1 -->
+            <article class="service-card shape-tl">
+                <div class="service-bg" style="background-image:url('https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="service-content">
+                    <div>
                         <div class="service-title">Web<br>Development</div>
-                        <div class="stars">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
+                        <div class="service-stars" aria-label="5 out of 5 stars">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                         </div>
                     </div>
                 </div>
+            </article>
 
-                <div class="service-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iBOi65XjQcnyxLIuwzwMa6lGxKyUcL.png" alt="Web Designing" style="object-position: 100% 0%;">
-                    <div class="service-overlay">
+            <!-- Card 2 -->
+            <article class="service-card shape-tr">
+                <div class="service-bg" style="background-image:url('https://images.unsplash.com/photo-1640622304701-6c6ea80906f1?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="service-content">
+                    <div>
                         <div class="service-title">Web<br>Designing</div>
-                        <div class="stars">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
+                        <div class="service-stars" aria-label="5 out of 5 stars">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                         </div>
                     </div>
                 </div>
+            </article>
 
-                <div class="service-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iBOi65XjQcnyxLIuwzwMa6lGxKyUcL.png" alt="Database Management" style="object-position: 0% 50%;">
-                    <div class="service-overlay">
+            <!-- Card 3 -->
+            <article class="service-card shape-bl">
+                <div class="service-bg" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="service-content">
+                    <div>
                         <div class="service-title">Database<br>Management</div>
-                        <div class="stars">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
+                        <div class="service-stars" aria-label="5 out of 5 stars">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                         </div>
                     </div>
                 </div>
+            </article>
 
-                <div class="service-card">
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iBOi65XjQcnyxLIuwzwMa6lGxKyUcL.png" alt="SEO" style="object-position: 100% 50%;">
-                    <div class="service-overlay">
+            <!-- Card 4 -->
+            <article class="service-card shape-br">
+                <div class="service-bg" style="background-image:url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="service-content">
+                    <div>
                         <div class="service-title">SEO</div>
-                        <div class="stars">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
+                        <div class="service-stars" aria-label="5 out of 5 stars">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
+        </div>
 
-            <div class="button-container">
-                <button class="explore-btn">Explore All</button>
-            </div>
+        <div class="services-cta">
+            <button class="explore-btn" id="explore">Explore All</button>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features-section" id="features">
+    <section class="features-section section" id="features">
         <div class="features-container">
             <div class="section-header">
                 <h1>Our <span class="highlight">Features</span></h1>
@@ -1329,7 +1604,7 @@
                     <p class="feature-description">
                         Outward clothes promise at gravity do excited. Sufficient particular let impression by reasonable oh expression is. Yet preference melancholy but end appearance.
                     </p>
-                    <a href="#" class="learn-more">Learn More</a>
+                    <a href="#" class="learn-more">Learn More →</a>
                 </div>
 
                 <div class="feature-card">
@@ -1337,7 +1612,7 @@
                     <p class="feature-description">
                         Outward clothes promise at gravity do excited. Sufficient particular let impression by reasonable oh expression is. Yet preference melancholy but end appearance.
                     </p>
-                    <a href="#" class="learn-more">Learn More</a>
+                    <a href="#" class="learn-more">Learn More →</a>
                 </div>
 
                 <div class="feature-card">
@@ -1345,7 +1620,7 @@
                     <p class="feature-description">
                         Outward clothes promise at gravity do excited. Sufficient particular let impression by reasonable oh expression is. Yet preference melancholy but end appearance.
                     </p>
-                    <a href="#" class="learn-more">Learn More</a>
+                    <a href="#" class="learn-more">Learn More →</a>
                 </div>
 
                 <div class="feature-card">
@@ -1353,30 +1628,32 @@
                     <p class="feature-description">
                         Outward clothes promise at gravity do excited. Sufficient particular let impression by reasonable oh expression is. Yet preference melancholy but end appearance.
                     </p>
-                    <a href="#" class="learn-more">Learn More</a>
+                    <a href="#" class="learn-more">Learn More →</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section" id="testimonials">
+    <section class="testimonials-section section" id="testimonials">
         <div class="container">
             <div class="section-header">
                 <h1>What <span class="highlight">Clients</span> Say</h1>
-                <p>Letter of on became he tended active enable to. Vicinity relation sensible sociable surprise screened no up as.</p>
+                <p>Letter of on become he tended active enable to. Vicinity relation sensible sociable surprise screened no up as.</p>
             </div>
 
             <div class="testimonials-wrapper">
-                <div class="testimonial-card active" data-index="0">
+                <div class="testimonial-card active">
                     <div class="testimonial-image">
                         <div class="image-container">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" alt="Robert Johnson">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Client Photo">
                         </div>
                     </div>
                     <div class="testimonial-content">
                         <h3 class="testimonial-title">Best Developers</h3>
-                        <p class="testimonial-text">Outward clothes promise at gravity do excited. Sufficient particular impossible by reasonable oh expression is. Yet preference connection unpleasant yet melancholy but end appearance. An excellence estimating terminated day everything.</p>
+                        <p class="testimonial-text">
+                            Outward clothes promise at gravity do excited. Sufficient particular impossible by reasonable oh expression is. Yet preference connection unpleasant yet melancholy but end appearance. And excellence partiality estimating terminated day everything.
+                        </p>
                         <div class="testimonial-rating">
                             <div class="star"></div>
                             <div class="star"></div>
@@ -1386,68 +1663,22 @@
                         </div>
                         <div class="author-info">
                             <div class="author-name">Robert Johnson</div>
-                            <div class="author-title">Director of Behance</div>
+                            <div class="author-title">Director at Behance</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="testimonial-card" data-index="1" style="display: none;">
-                    <div class="testimonial-image">
-                        <div class="image-container">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop" alt="Sarah Williams">
-                        </div>
-                    </div>
-                    <div class="testimonial-content">
-                        <h3 class="testimonial-title">Excellent Service</h3>
-                        <p class="testimonial-text">Outstanding quality and professional approach. The team exceeded all our expectations with their attention to detail and dedication. They delivered results faster than anticipated and provided exceptional support throughout the entire project journey.</p>
-                        <div class="testimonial-rating">
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                        </div>
-                        <div class="author-info">
-                            <div class="author-name">Sarah Williams</div>
-                            <div class="author-title">CEO of TechCorp</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card" data-index="2" style="display: none;">
-                    <div class="testimonial-image">
-                        <div class="image-container">
-                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop" alt="Michael Chen">
-                        </div>
-                    </div>
-                    <div class="testimonial-content">
-                        <h3 class="testimonial-title">Great Partnership</h3>
-                        <p class="testimonial-text">Working with this team has been transformative for our business. Their innovative solutions and proactive communication made the entire process seamless. They truly care about their clients' success and go above and beyond expectations.</p>
-                        <div class="testimonial-rating">
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                            <div class="star"></div>
-                        </div>
-                        <div class="author-info">
-                            <div class="author-name">Michael Chen</div>
-                            <div class="author-title">Founder of StartupHub</div>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <div class="nav-dots">
-                    <div class="dot active" data-index="0"></div>
-                    <div class="dot" data-index="1"></div>
-                    <div class="dot" data-index="2"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing-section" id="pricing">
+    <section class="pricing-section section" id="pricing">
         <div class="container">
             <div class="section-header">
                 <h1>Our <span class="highlight">Pricing Plan</span></h1>
@@ -1472,7 +1703,7 @@
 
                 <!-- Teams Plan (Featured) -->
                 <div class="pricing-card featured">
-                    <h3 class="plan-name" style="color: #17a2a2;">For Teams</h3>
+                    <h3 class="plan-name">For Teams</h3>
                     <div class="plan-price">$99</div>
                     
                     <ul class="features-list">
@@ -1504,10 +1735,10 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq-section" id="faq">
+    <section class="faq-section section" id="faq">
         <div class="faq-container">
             <div class="section-header">
-                <h1 class="faq-title">FAQs</h1>
+                <h1>FAQs</h1>
             </div>
 
             <div class="faq-list" id="faqList">
@@ -1632,124 +1863,107 @@
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            header.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // Smooth scroll for navigation links
-        document.querySelectorAll('nav a').forEach(link => {
+        // Mobile menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+
+        function toggleMobileMenu() {
+            const isActive = menuToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active', isActive);
+            overlay.classList.toggle('active', isActive);
+            document.body.style.overflow = isActive ? 'hidden' : '';
+        }
+
+        menuToggle.addEventListener('click', toggleMobileMenu);
+        overlay.addEventListener('click', toggleMobileMenu);
+
+        // Close mobile menu when clicking links
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+
+        // Auth button handlers
+        document.querySelectorAll('.sign-in, .mobile-sign-in').forEach(btn => {
+            btn.addEventListener('click', () => alert('Sign in functionality'));
+        });
+
+        document.querySelectorAll('.sign-up, .mobile-sign-up').forEach(btn => {
+            btn.addEventListener('click', () => alert('Sign up functionality'));
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a, .mobile-menu a').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const target = e.target.getAttribute('href');
-                if (target.startsWith('#')) {
-                    const section = document.querySelector(target);
-                    if (section) {
-                        section.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
+                const target = document.querySelector(e.target.getAttribute('href'));
+                target?.scrollIntoView({ behavior: 'smooth' });
             });
         });
 
-        // Button interactions
+        // Button interactions with loading states
         document.querySelectorAll('.btn-primary').forEach(btn => {
-            btn.addEventListener('click', () => {
-                console.log('Get Started clicked');
-                alert('Welcome! Let\'s get started with our web services.');
+            btn.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.innerHTML = '<span class="loading"></span>';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.disabled = false;
+                    alert('Welcome! Let\'s get started with our web services.');
+                }, 1500);
             });
         });
 
-        document.querySelectorAll('.btn-secondary').forEach(btn => {
-            btn.addEventListener('click', () => {
-                console.log('Explore clicked');
-                alert('Explore our full range of web services.');
-            });
-        });
-
-        document.querySelector('.sign-in').addEventListener('click', () => {
-            console.log('Sign in clicked');
-            alert('Sign in functionality');
-        });
-
-        document.querySelector('.sign-up').addEventListener('click', () => {
-            console.log('Sign up clicked');
-            alert('Sign up functionality');
+        document.querySelectorAll('.btn-secondary, .explore-btn').forEach(btn => {
+            btn.addEventListener('click', () => alert('Explore our web services.'));
         });
 
         // Testimonials functionality
         const testimonialCards = document.querySelectorAll('.testimonial-card');
         const navDots = document.querySelectorAll('.dot');
-        let currentIndex = 0;
+        let currentTestimonial = 0;
+        let testimonialInterval;
 
         function showTestimonial(index) {
-            // Hide all cards
-            testimonialCards.forEach(card => {
-                card.classList.remove('active');
-                card.style.display = 'none';
+            testimonialCards.forEach((card, i) => {
+                card.classList.toggle('active', i === index);
+                card.style.display = i === index ? 'grid' : 'none';
             });
-
-            // Remove active class from all dots
-            navDots.forEach(dot => dot.classList.remove('active'));
-
-            // Show selected card
-            testimonialCards[index].classList.add('active');
-            testimonialCards[index].style.display = 'grid';
-
-            // Add active class to selected dot
-            navDots[index].classList.add('active');
-
-            currentIndex = index;
+            
+            navDots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            currentTestimonial = index;
         }
 
-        // Add click handlers to dots
+        // Initialize testimonials
         navDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => showTestimonial(index));
+            dot.addEventListener('click', () => {
+                showTestimonial(index);
+                resetTestimonialInterval();
+            });
         });
 
-        // Auto-rotate testimonials every 8 seconds
-        setInterval(() => {
-            const nextIndex = (currentIndex + 1) % testimonialCards.length;
-            showTestimonial(nextIndex);
-        }, 8000);
+        function resetTestimonialInterval() {
+            clearInterval(testimonialInterval);
+            testimonialInterval = setInterval(() => {
+                showTestimonial((currentTestimonial + 1) % testimonialCards.length);
+            }, 8000);
+        }
 
         // FAQ functionality
-        const faqItems = document.querySelectorAll('.faq-item');
-
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            
-            question.addEventListener('click', () => {
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
                 const isActive = item.classList.contains('active');
-                
-                // Close all items
-                faqItems.forEach(otherItem => {
-                    otherItem.classList.remove('active');
-                });
-                
-                // Open clicked item if it wasn't active
-                if (!isActive) {
-                    item.classList.add('active');
-                }
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
             });
         });
 
-        // Add smooth animations on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.service-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        });
-
-        // Intersection Observer for scroll animations
+        // Pricing card animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1763,9 +1977,42 @@
         });
 
         // Schedule demo button
-        document.querySelector('.schedule-btn').addEventListener('click', function() {
-            console.log('Schedule demo button clicked');
-            alert('Schedule demo functionality - redirect to booking page or form');
+        document.querySelector('.schedule-btn').addEventListener('click', () => {
+            alert('Schedule demo functionality - redirect to booking page');
+        });
+
+        // Service cards animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.service-card').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Start testimonial rotation
+            resetTestimonialInterval();
+        });
+
+        // Client logo hover effects
+        document.querySelectorAll('.client-logo').forEach(logo => {
+            logo.addEventListener('mouseenter', () => {
+                logo.style.transform = 'translateY(-3px)';
+            });
+            logo.addEventListener('mouseleave', () => {
+                logo.style.transform = 'translateY(0)';
+            });
+        });
+
+        // CTA button interactions
+        document.querySelectorAll('.cta-button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const plan = this.closest('.pricing-card').querySelector('.plan-name').textContent;
+                alert(`Requesting demo for: ${plan}`);
+            });
         });
     </script>
 </body>
